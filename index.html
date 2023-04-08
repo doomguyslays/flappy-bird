@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flappy Bird</title>
+	<style>
+		#gameArea {
+			background-color: #87CEEB;
+			height: 500px;
+			width: 800px;
+			margin: auto;
+			position: relative;
+			overflow: hidden;
+		}
+
+		#bird {
+			background-color: yellow;
+			height: 50px;
+			width: 50px;
+			position: absolute;
+			bottom: 50%;
+			left: 50px;
+			border-radius: 50%;
+			animation: bird-animation 0.5s infinite alternate;
+		}
+
+		.pipe {
+			background-color: green;
+			height: 200px;
+			width: 50px;
+			position: absolute;
+			bottom: 0;
+			animation: pipe-animation 3s infinite linear;
+			animation-delay: 1s;
+		}
+
+		.pipe-top {
+			background-color: green;
+			height: 200px;
+			width: 50px;
+			position: absolute;
+			top: 0;
+			animation: pipe-animation 3s infinite linear;
+			animation-delay: 1s;
+		}
+
+		@keyframes bird-animation {
+			0% { transform: translateY(-10px); }
+			100% { transform: translateY(10px); }
+		}
+
+		@keyframes pipe-animation {
+			0% { left: 800px; }
+			100% { left: -50px; }
+		}
+	</style>
+</head>
+<body>
+	<div id="gameArea">
+		<div id="bird"></div>
+		<div class="pipe"></div>
+		<div class="pipe-top"></div>
+	</div>
+
+	<script>
+		var bird = document.getElementById("bird");
+		var gameArea = document.getElementById("gameArea");
+
+		function jump() {
+			bird.style.bottom = parseInt(bird.style.bottom) + 50 + "px";
+		}
+
+		document.addEventListener("keydown", function(event) {
+			if (event.code === "Space") {
+				jump();
+			}
+		});
+
+		var gameLoop = setInterval(function() {
+			var birdBottom = parseInt(bird.style.bottom);
+
+			if (birdBottom > 0 && birdBottom < 500) {
+				bird.style.bottom = birdBottom - 2 + "px";
+			}
+
+			var pipes = document.querySelectorAll(".pipe");
+
+			pipes.forEach(function(pipe) {
+				var pipeLeft = parseInt(pipe.style.left);
+
+				if (pipeLeft > -50 && pipeLeft < 50) {
+					var pipeTop = parseInt(pipe.style.height);
+
+					if (birdBottom < pipeTop || birdBottom > (pipeTop + 150)) {
+						clearInterval(gameLoop);
+						alert("Game Over!");
+					}
+				}
+			});
+		}, 10);
+	</script>
+</body>
+</html>
